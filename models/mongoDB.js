@@ -11,9 +11,22 @@ const client = new MongoClient(uri, {
   },
 });
 
-const Courses = client.db("Interview_prep").collection("courses");
+async function connect() {
+  try {
+    await client.connect();
+    console.log("Connected to MongoDB");
+  } catch (err) {
+    console.error(err);
+  }
+}
 
-module.exports = {
-  client,
-  Courses,
-};
+async function disconnect() {
+  try {
+    await client.close();
+    console.log("Disconnected from MongoDB");
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+module.exports = { connect, disconnect, client };

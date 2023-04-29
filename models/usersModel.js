@@ -1,45 +1,38 @@
-const { MongoClient, ServerApiVersion } = require("mongodb");
 const { client } = require("./mongoDB");
 
 const Users = client.db("Interview_prep").collection("users");
 
-async function getUsersDB() {
+async function getAllUsersDB() {
   try {
-    await client.connect();
-    const query = {}
-    const users = await Users.find(query).toArray();
+    const users = await Users.find().toArray();
     return users;
-  } finally {
-    await client.close();
+  } catch (err) {
+    console.error(err);
   }
 }
-getUsersDB().catch(console.error);
 
-async function postUserDB(data) {
+async function createUserDB(user) {
   try {
-    await client.connect();
-    const result = await Users.insertOne(data);
-    return result;
-  } finally {
-    await client.close();
+    const result = await Users.insertOne(user);
+    console.log(`Created user with id: ${result.insertedId}`);
+  } catch (err) {
+    console.error(err);
   }
 }
-postUserDB().catch(console.error);
 
-async function updateUserDB(filter, updatedDoc, options) {
+async function deleteUserDB(query) {
   try {
-    await client.connect();
-
-    const result = await Users.updateOne(filter, updatedDoc, options);
-    return result;
-  } finally {
-    await client.close();
+    const result = await Users.deleteOne(query);
+    return result.deletedCount;
+  } catch (error) {
+    console.error(error);
+    return null;
   }
 }
-updateUserDB().catch(err => console.log(err))
 
-module.exports = {
-  postUserDB,
-  getUsersDB,
-  updateUserDB,
-};
+async function updateUserDB(filter, updateDoc, options) {
+  const result = await Users.updateOne(filter, updateDoc, options);
+  return result;
+}
+
+module.exports = { getAllUsersDB, createUserDB, deleteUserDB, updateUserDB };
