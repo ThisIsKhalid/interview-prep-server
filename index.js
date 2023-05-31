@@ -1,9 +1,10 @@
-const express = require("express");
-const cors = require("cors");
-require("dotenv").config();
+import cors from "cors";
+import dotenv from "dotenv";
+import express from "express";
+dotenv.config();
 
-const usersRouter = require('./routes/usersRoute')
-
+import usersRouter from "./routes/usersRoute.js";
+import { connectToDatabase } from "./db/db.js";
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -13,7 +14,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Define routes
-app.use(usersRouter)
+app.use(usersRouter);
+
+await connectToDatabase();
 
 // Root route
 app.get("/", (req, res) => {
@@ -23,3 +26,4 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
   console.log(`Interview Prep is running on ${port}`);
 });
+

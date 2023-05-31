@@ -1,8 +1,9 @@
-const { client } = require("./mongoDB");
+import { Users } from "../db/db.js";
 
-const Users = client.db("Interview_prep").collection("users");
 
-async function getAllUsersDB() {
+
+
+export async function getAllUsersDB() {
   try {
     const users = await Users.find().toArray();
     return users;
@@ -11,7 +12,7 @@ async function getAllUsersDB() {
   }
 }
 
-async function createUserDB(user) {
+export async function createUserDB(user) {
   try {
     const result = await Users.insertOne(user);
     console.log(`Created user with id: ${result.insertedId}`);
@@ -20,7 +21,7 @@ async function createUserDB(user) {
   }
 }
 
-async function deleteUserDB(query) {
+export async function deleteUserDB(query) {
   try {
     const result = await Users.deleteOne(query);
     return result.deletedCount;
@@ -30,9 +31,7 @@ async function deleteUserDB(query) {
   }
 }
 
-async function updateUserDB(filter, updateDoc, options) {
+export async function updateUserDB(filter, updateDoc, options) {
   const result = await Users.updateOne(filter, updateDoc, options);
   return result;
 }
-
-module.exports = { getAllUsersDB, createUserDB, deleteUserDB, updateUserDB };

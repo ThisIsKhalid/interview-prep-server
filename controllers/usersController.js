@@ -1,20 +1,23 @@
-const {
-  getAllUsersDB,
+import {
   createUserDB,
   deleteUserDB,
+  getAllUsersDB,
   updateUserDB,
-} = require("../models/usersModel");
+} from "../models/usersModel.js";
 
-exports.getAllUsers = async (req, res) => {
+export const getAllUsers = async (req, res) => {
   try {
     const users = await getAllUsersDB();
-    res.status(200).send(users);
+    res.status(200).json({
+      message: "Successfull",
+      data: users,
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
 
-exports.createUser = async (req, res) => {
+export const createUser = async (req, res) => {
   try {
     const user = req.body;
     await createUserDB(user);
@@ -25,7 +28,7 @@ exports.createUser = async (req, res) => {
   }
 };
 
-exports.deleteUser = async (req, res) => {
+export const deleteUser = async (req, res) => {
   const email = req.params.email;
   const query = { email: email };
   const result = await deleteUserDB(query);
@@ -38,9 +41,9 @@ exports.deleteUser = async (req, res) => {
   }
 };
 
-exports.updateUser = async (req, res) => {
+export const updateUser = async (req, res) => {
   const email = req.params.email;
-  const {role} = req.body;
+  const { role } = req.body;
   // console.log(email, role);
   const filter = { email: email };
   const options = { upsert: true };
